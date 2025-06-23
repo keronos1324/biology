@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Биологическая викторина: Органоиды клетки</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1b5e20, #2e7d32, #388e3c);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            color: #333;
+        }
+        
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            width: 100%;
+            max-width: 900px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .header {
+            background: linear-gradient(to right, #1b5e20, #2e7d32);
+            color: white;
+            padding: 25px;
+            text-align: center;
+            position: relative;
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .content {
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .game-info {
+            display: flex;
+            justify-content: space-around;
+            width: 100%;
+            margin-bottom: 30px;
+            background: #e8f5e9;
+            padding: 15px;
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .info-box {
+            text-align: center;
+            padding: 10px 20px;
+        }
+        
+        .info-box h3 {
+            font-size: 1.1rem;
+            color: #1b5e20;
+            margin-bottom: 5px;
+        }
+        
+        .info-box .value {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #d32f2f;
+        }
+        
+        .question-container {
+            text-align: center;
+            margin-bottom: 30px;
+            width: 100%;
+            min-height: 200px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            background: #e8f5e9;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .function-text {
+            font-size: 1.8rem;
+            color: #1b5e20;
+            margin: 15px 0;
+            text-align: center;
+            line-height: 1.6;
+            font-style: italic;
+        }
+        
+        .cell-type {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #2e7d32;
+            margin-top: 15px;
+            padding: 10px 20px;
+            background: #c8e6c9;
+            border-radius: 50px;
+            display: inline-block;
+        }
+        
+        /* Контейнер для плиток с ответами */
+        .tiles-container {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 12px;
+            width: 100%;
+            max-width: 800px;
+            margin: 20px auto;
+        }
+        
+        .tile {
+            background: linear-gradient(to bottom, #4caf50, #388e3c);
+            color: white;
+            border: none;
+            padding: 18px 5px;
+            font-size: 1.1rem;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 90px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            font-weight: bold;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .tile:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+            background: linear-gradient(to bottom, #388e3c, #2e7d32);
+        }
+        
+        .tile.correct {
+            background: linear-gradient(to bottom, #66bb6a, #43a047);
+            transform: scale(1.05);
+            box-shadow: 0 8px 25px rgba(76, 175, 80, 0.4);
+        }
+        
+        .tile.incorrect {
+            background: linear-gradient(to bottom, #ef5350, #e53935);
+            transform: scale(0.95);
+            box-shadow: 0 8px 25px rgba(244, 67, 54, 0.3);
+        }
+        
+        .result-container {
+            min-height: 80px;
+            width: 100%;
+            padding: 20px;
+            border-radius: 12px;
+            margin-top: 20px;
+            text-align: center;
+            font-size: 1.4rem;
+            font-weight: bold;
+            transition: all 0.4s ease;
+            background: #e8f5e9;
+        }
+        
+        .correct-msg {
+            color: #2e7d32;
+            background: rgba(76, 175, 80, 0.15);
+            border: 2px solid #2e7d32;
+        }
+        
+        .incorrect-msg {
+            color: #c62828;
+            background: rgba(244, 67, 54, 0.15);
+            border: 2px solid #c62828;
+        }
+        
+        .start-screen {
+            text-align: center;
+            padding: 40px 20px;
+        }
+        
+        .start-title {
+            font-size: 2.5rem;
+            color: #1b5e20;
+            margin-bottom: 20px;
+        }
+        
+        .start-description {
+            font-size: 1.2rem;
+            color: #388e3c;
+            max-width: 700px;
+            margin: 0 auto 30px;
+            line-height: 1.6;
+        }
+        
+        .cell-selection {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin: 40px 0;
+            flex-wrap: wrap;
+        }
+        
+        .cell-option {
+            width: 280px;
+            height: 320px;
+            background: #e8f5e9;
+            border-radius: 20px;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            transition: all 0.4s ease;
+            cursor: pointer;
+            border: 3px solid transparent;
+        }
+        
+        .cell-option:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+            border-color: #4caf50;
+        }
+        
+        .cell-option.animal-cell {
+            background: linear-gradient(to bottom, #81c784, #66bb6a);
+        }
+        
+        .cell-option.plant-cell {
+            background: linear-gradient(to bottom, #a5d6a7, #81c784);
+        }
+        
+        .cell-icon {
+            font-size: 5rem;
+            margin-bottom: 20px;
+            color: #1b5e20;
+        }
+        
+        .cell-title {
+            font-size: 2rem;
+            color: #1b5e20;
+            margin-bottom: 15px;
+        }
+        
+        .cell-description {
+            font-size: 1.1rem;
+            color: #2e7d32;
+            text-align: center;
+            line-height: 1.5;
+        }
+        
+        .timer-container {
+            width: 100%;
+            max-width: 500px;
+            height: 25px;
+            background: #e0e0e0;
+            border-radius: 12px;
+            margin: 20px 0;
+            overflow: hidden;
+            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+        
+        .timer-bar {
+            height: 100%;
+            background: linear-gradient(to right, #4caf50, #81c784);
+            width: 100%;
+            transition: width 1s linear;
+            border-radius: 12px;
+        }
+        
+        .footer {
+            background: #1b5e20;
+            color: white;
+            text-align: center;
+            padding: 15px;
+            font-size: 0.9rem;
+        }
+        
+        .result-screen {
+            text-align: center;
+            padding: 40px 20px;
+        }
+        
+        .result-title {
+            font-size: 2.5rem;
+            color: #1b5e20;
+            margin-bottom: 20px;
+        }
+        
+        .result-score {
+            font-size: 5rem;
+            font-weight: bold;
+            color: #d32f2f;
+            margin: 30px 0;
+            text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.2);
+        }
+        
+        .result-message {
+            font-size: 2rem;
+            color: #2e7d32;
+            margin-bottom: 40px;
+            font-weight: bold;
+        }
+        
+        .stats-container {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+        }
+        
+        .stat-box {
+            background: #e8f5e9;
+            padding: 20px;
+            border-radius: 15px;
+            min-width: 180px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .stat-value {
+            font-size: 3rem;
+            font-weight: bold;
+            color: #2e7d32;
+        }
+        
+        .stat-label {
+            font-size: 1.2rem;
+            color: #1b5e20;
+            margin-top: 10px;
+        }
+        
+        .restart-btn {
+            background: linear-gradient(to right, #4caf50, #388e3c);
+            color: white;
+            border: none;
+            padding: 18px 60px;
+            font-size: 1.5rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+            box-shadow: 0 8px 25px rgba(76, 175, 80, 0.4);
+            margin-top: 20px;
+        }
+        
+        .restart-btn:hover {
+            background: linear-gradient(to right, #388e3c, #2e7d32);
+            transform: translateY(-5px);
+            box-shadow: 0 12px 30px rgba(76, 175, 80, 0.6);
+        }
+        
+        /* Адаптивность */
+        @media (max-width: 900px) {
+            .tiles-container {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .function-text {
+                font-size: 1.5rem;
+            }
+            
+            .info-box h3 {
+                font-size: 0.9rem;
+            }
+            
+            .info-box .value {
+                font-size: 1.5rem;
+            }
+            
+            .game-info {
+                padding: 10px;
+            }
+            
+            .start-title, .result-title {
+                font-size: 2rem;
+            }
+            
+            .result-score {
+                font-size: 4rem;
+            }
+            
+            .tiles-container {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 10px;
+            }
+            
+            .tile {
+                padding: 15px 5px;
+                font-size: 1rem;
+                min-height: 80px;
+            }
+            
+            .result-message {
+                font-size: 1.7rem;
+            }
+            
+            .stat-value {
+                font-size: 2.5rem;
+            }
+            
+            .cell-option {
+                width: 100%;
+                max-width: 350px;
+                height: auto;
+                padding: 25px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .header {
+                padding: 20px 15px;
+            }
+            
+            .header h1 {
+                font-size: 1.7rem;
+            }
+            
+            .content {
+                padding: 20px 15px;
+            }
+            
+            .function-text {
+                font-size: 1.3rem;
+            }
+            
+            .tiles-container {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 8px;
+            }
+            
+            .tile {
+                padding: 12px 5px;
+                font-size: 0.95rem;
+                min-height: 70px;
+            }
+            
+            .result-container {
+                font-size: 1.2rem;
+                padding: 15px;
+            }
+            
+            .game-info {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .start-title, .result-title {
+                font-size: 1.8rem;
+            }
+            
+            .result-score {
+                font-size: 3rem;
+            }
+            
+            .result-message {
+                font-size: 1.5rem;
+            }
+            
+            .restart-btn {
+                padding: 15px 40px;
+                font-size: 1.2rem;
+            }
+            
+            .stat-box {
+                min-width: 140px;
+                padding: 15px;
+            }
+            
+            .stat-value {
+                font-size: 2rem;
+            }
+            
+            .cell-selection {
+                gap: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-microscope"></i> Органоиды клетки</h1>
+            <p></p>
+        </div>
+        
+        <!-- Стартовый экран -->
+        <div class="start-screen" id="start-screen">
+            <h2 class="start-title">Органоиды клетки</h2>
+            <p class="start-description">Выберите тип клетки, с которой хотите работать. Вам будут показаны функции органоидов, а вы должны будете угадать их название.</p>
+            
+            <div class="cell-selection">
+                <div class="cell-option animal-cell" id="animal-cell">
+                    <i class="fas fa-paw cell-icon"></i>
+                    <h3 class="cell-title">Животная клетка</h3>
+                    <p class="cell-description">Содержит органоиды, характерные для клеток животных организмов</p>
+                </div>
+                
+                <div class="cell-option plant-cell" id="plant-cell">
+                    <i class="fas fa-seedling cell-icon"></i>
+                    <h3 class="cell-title">Растительная клетка</h3>
+                    <p class="cell-description">Содержит органоиды, характерные для клеток растений</p>
+                </div>
+            </div>
+            
+            <div class="rules">
+                <h3>Правила игры:</h3>
+                <ul>
+                    <li>Игра длится <strong>2 минуты 30 секунд</strong></li>
+                    <li>За каждый правильный ответ вы получаете <strong>10 баллов</strong></li>
+                    <li>На экране будет показана функция органоида</li>
+                    <li>Выберите правильный органоид из плиток внизу экрана</li>
+                    <li>Старайтесь отвечать как можно быстрее, чтобы набрать больше очков</li>
+                    <li>По истечении времени игра завершится автоматически</li>
+                </ul>
+            </div>
+        </div>
+        
+        <!-- Игровой экран (изначально скрыт) -->
+        <div class="content" id="game-screen" style="display:none;">
+            <div class="game-info">
+                <div class="info-box">
+                    <h3>Счет</h3>
+                    <div class="value" id="score">0</div>
+                </div>
+                <div class="info-box">
+                    <h3>Осталось</h3>
+                    <div class="value" id="time">02:30</div>
+                </div>
+                <div class="info-box">
+                    <h3>Ответов</h3>
+                    <div class="value" id="answers">0</div>
+                </div>
+            </div>
+            
+            <div class="timer-container">
+                <div class="timer-bar" id="timer-bar"></div>
+            </div>
+            
+            <div class="question-container">
+                <div class="function-text" id="function-text">
+                    Содержит генетический материал клетки и управляет всеми процессами
+                </div>
+                <div class="cell-type" id="cell-type">
+                    Животная клетка
+                </div>
+            </div>
+            
+            <!-- Контейнер для плиток с ответами -->
+            <div class="tiles-container" id="tiles-container">
+                <!-- Плитки будут генерироваться динамически -->
+            </div>
+            
+            <div class="result-container" id="result-container">
+                Выберите правильный органоид из плиток ниже
+            </div>
+        </div>
+        
+        <!-- Экран результатов (изначально скрыт) -->
+        <div class="result-screen" id="result-screen" style="display:none;">
+            <h2 class="result-title">Игра завершена!</h2>
+            <div class="result-message" id="result-message">Отличный результат!</div>
+            <div class="result-score" id="final-score">0</div>
+            
+            <div class="stats-container">
+                <div class="stat-box">
+                    <div class="stat-value" id="correct-answers">0</div>
+                    <div class="stat-label">Правильно</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value" id="incorrect-answers">0</div>
+                    <div class="stat-label">Неправильно</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value" id="total-answers">0</div>
+                    <div class="stat-label">Всего ответов</div>
+                </div>
+            </div>
+            
+            <button class="restart-btn" id="restart-btn">
+                Играть снова <i class="fas fa-redo"></i>
+            </button>
+        </div>
+        
+        <div class="footer">
+            <p></p>
+        </div>
+    </div>
+
+    <script>
+        // База данных органоидов для разных типов клеток
+        const organelles = {
+            animal: [
+                { name: "Ядро", function: "Содержит генетический материал клетки и управляет всеми процессами" },
+                { name: "Митохондрия", function: "Производит энергию в виде АТФ посредством клеточного дыхания" },
+                { name: "Эндоплазматическая сеть", function: "Синтезирует белки и липиды, участвует в транспорте веществ" },
+                { name: "Аппарат Гольджи", function: "Модифицирует, сортирует и упаковывает белки для секреции или транспорта" },
+                { name: "Лизосома", function: "Содержит пищеварительные ферменты для расщепления макромолекул" },
+                { name: "Рибосома", function: "Синтезирует белки по инструкции мРНК" },
+                { name: "Цитоскелет", function: "Обеспечивает структурную поддержку и участвует в движении клетки" },
+                { name: "Клеточная мембрана", function: "Регулирует проникновение веществ в клетку и из неё" },
+                { name: "Центриоль", function: "Участвует в образовании веретена деления при митозе" },
+                { name: "Цитоплазма", function: "Внутренняя среда клетки, содержащая органоиды и обеспечивающая их взаимодействие" }
+            ],
+            plant: [
+                { name: "Хлоропласт", function: "Осуществляет фотосинтез, преобразуя световую энергию в химическую" },
+                { name: "Клеточная стенка", function: "Обеспечивает структурную поддержку и защиту клетки" },
+                { name: "Вакуоль", function: "Хранит воду, ионы и питательные вещества, поддерживает тургор" },
+                { name: "Плазмодесма", function: "Обеспечивает коммуникацию и транспорт веществ между растительными клетками" },
+                { name: "Ядро", function: "Содержит генетический материал клетки и управляет всеми процессами" },
+                { name: "Митохондрия", function: "Производит энергию в виде АТФ посредством клеточного дыхания" },
+                { name: "Эндоплазматическая сеть", function: "Синтезирует белки и липиды, участвует в транспорте веществ" },
+                { name: "Аппарат Гольджи", function: "Модифицирует, сортирует и упаковывает белки для секреции или транспорта" },
+                { name: "Рибосома", function: "Синтезирует белки по инструкции мРНК" },
+                { name: "Цитоплазма", function: "Внутренняя среда клетки, содержащая органоиды и обеспечивающая их взаимодействие" }
+            ]
+        };
+
+        // Элементы DOM
+        const startScreen = document.getElementById('start-screen');
+        const gameScreen = document.getElementById('game-screen');
+        const resultScreen = document.getElementById('result-screen');
+        const animalCellBtn = document.getElementById('animal-cell');
+        const plantCellBtn = document.getElementById('plant-cell');
+        const restartButton = document.getElementById('restart-btn');
+        const functionTextElement = document.getElementById('function-text');
+        const cellTypeElement = document.getElementById('cell-type');
+        const resultContainer = document.getElementById('result-container');
+        const scoreElement = document.getElementById('score');
+        const timeElement = document.getElementById('time');
+        const answersElement = document.getElementById('answers');
+        const timerBar = document.getElementById('timer-bar');
+        const finalScoreElement = document.getElementById('final-score');
+        const correctAnswersElement = document.getElementById('correct-answers');
+        const incorrectAnswersElement = document.getElementById('incorrect-answers');
+        const totalAnswersElement = document.getElementById('total-answers');
+        const resultMessageElement = document.getElementById('result-message');
+        const tilesContainer = document.getElementById('tiles-container');
+
+        // Переменные игры
+        let score = 0;
+        let correctAnswers = 0;
+        let incorrectAnswers = 0;
+        let totalAnswers = 0;
+        let gameTimer;
+        let timeLeft = 150; // 2 минуты 30 секунд
+        let currentOrganelle;
+        let correctOrganelle;
+        let currentCellType = 'animal';
+
+        // Инициализация игры
+        function initGame(cellType) {
+            currentCellType = cellType;
+            
+            // Сброс переменных
+            score = 0;
+            correctAnswers = 0;
+            incorrectAnswers = 0;
+            totalAnswers = 0;
+            timeLeft = 150;
+            
+            // Обновление UI
+            scoreElement.textContent = score;
+            answersElement.textContent = totalAnswers;
+            timeElement.textContent = formatTime(timeLeft);
+            timerBar.style.width = '100%';
+            cellTypeElement.textContent = cellType === 'animal' ? 'Животная клетка' : 'Растительная клетка';
+            
+            // Показать игровой экран
+            startScreen.style.display = 'none';
+            resultScreen.style.display = 'none';
+            gameScreen.style.display = 'flex';
+            
+            // Запустить таймер
+            startTimer();
+            
+            // Сгенерировать первый вопрос
+            nextQuestion();
+        }
+
+        // Форматирование времени (минуты:секунды)
+        function formatTime(seconds) {
+            const mins = Math.floor(seconds / 60).toString().padStart(2, '0');
+            const secs = (seconds % 60).toString().padStart(2, '0');
+            return `${mins}:${secs}`;
+        }
+
+        // Запуск таймера
+        function startTimer() {
+            clearInterval(gameTimer);
+            
+            gameTimer = setInterval(() => {
+                timeLeft--;
+                timeElement.textContent = formatTime(timeLeft);
+                timerBar.style.width = `${(timeLeft / 150) * 100}%`;
+                
+                if (timeLeft <= 0) {
+                    endGame();
+                }
+            }, 1000);
+        }
+
+        // Выбор случайного органоида
+        function getRandomOrganelle() {
+            const organelleList = organelles[currentCellType];
+            const randomIndex = Math.floor(Math.random() * organelleList.length);
+            return organelleList[randomIndex];
+        }
+
+        // Генерация случайных органоидов
+        function getRandomOrganelles(excludeOrganelle, count) {
+            const organelleList = [];
+            const allOrganelles = [...organelles[currentCellType].map(o => o.name)];
+            
+            // Удаляем правильный органоид из списка
+            const filteredOrganelles = allOrganelles.filter(o => o !== excludeOrganelle);
+            
+            // Перемешиваем массив
+            const shuffled = filteredOrganelles.sort(() => 0.5 - Math.random());
+            
+            // Берем нужное количество
+            return shuffled.slice(0, count);
+        }
+
+        // Отображение нового вопроса
+        function nextQuestion() {
+            currentOrganelle = getRandomOrganelle();
+            functionTextElement.textContent = currentOrganelle.function;
+            correctOrganelle = currentOrganelle.name;
+            
+            // Очищаем контейнер с плитками
+            tilesContainer.innerHTML = '';
+            
+            // Генерируем 24 случайные органоиды + 1 правильную
+            const allOrganelles = getRandomOrganelles(correctOrganelle, 24);
+            allOrganelles.push(correctOrganelle);
+            
+            // Перемешиваем массив
+            const shuffledOrganelles = allOrganelles.sort(() => 0.5 - Math.random());
+            
+            // Создаем плитки
+            shuffledOrganelles.forEach(organelle => {
+                const tile = document.createElement('div');
+                tile.className = 'tile';
+                tile.textContent = organelle;
+                tile.addEventListener('click', () => checkAnswer(organelle));
+                tilesContainer.appendChild(tile);
+            });
+            
+            resultContainer.textContent = "Выберите правильный органоид из плиток ниже";
+            resultContainer.className = "result-container";
+        }
+
+        // Проверка ответа
+        function checkAnswer(selectedOrganelle) {
+            // Проверяем, что игра не завершена
+            if (timeLeft <= 0) return;
+            
+            totalAnswers++;
+            answersElement.textContent = totalAnswers;
+            
+            // Находим плитку с выбранным ответом
+            const tiles = document.querySelectorAll('.tile');
+            tiles.forEach(tile => {
+                if (tile.textContent === selectedOrganelle) {
+                    if (selectedOrganelle === correctOrganelle) {
+                        tile.classList.add('correct');
+                        score += 10;
+                        correctAnswers++;
+                        resultContainer.textContent = `Правильно! ${correctOrganelle}: ${currentOrganelle.function}`;
+                        resultContainer.className = "result-container correct-msg";
+                    } else {
+                        tile.classList.add('incorrect');
+                        incorrectAnswers++;
+                        resultContainer.textContent = `Неправильно! Правильный ответ: ${correctOrganelle}`;
+                        resultContainer.className = "result-container incorrect-msg";
+                        
+                        // Показываем правильный ответ
+                        tiles.forEach(t => {
+                            if (t.textContent === correctOrganelle) {
+                                t.classList.add('correct');
+                            }
+                        });
+                    }
+                }
+            });
+            
+            scoreElement.textContent = score;
+            
+            // Отключаем все плитки после выбора
+            tiles.forEach(tile => {
+                tile.style.pointerEvents = 'none';
+            });
+            
+            // Переход к следующему вопросу через 1.5 секунды
+            setTimeout(() => {
+                nextQuestion();
+            }, 1500);
+        }
+
+        // Завершение игры
+        function endGame() {
+            clearInterval(gameTimer);
+            
+            // Определение сообщения по результатам
+            let message;
+            if (score >= 200) {
+                message = "Превосходно! Вы биологический гений!";
+            } else if (score >= 150) {
+                message = "Отлично! Вы знаете клеточную биологию на отлично!";
+            } else if (score >= 100) {
+                message = "Очень хорошо! Отличные знания органоидов!";
+            } else if (score >= 50) {
+                message = "Хорошо! Продолжайте изучать биологию!";
+            } else {
+                message = "Попробуйте еще раз! Биология - это интересно!";
+            }
+            
+            // Обновление UI экрана результатов
+            finalScoreElement.textContent = score;
+            correctAnswersElement.textContent = correctAnswers;
+            incorrectAnswersElement.textContent = incorrectAnswers;
+            totalAnswersElement.textContent = totalAnswers;
+            resultMessageElement.textContent = message;
+            
+            // Показать экран результатов
+            gameScreen.style.display = 'none';
+            resultScreen.style.display = 'block';
+        }
+
+        // Обработчики событий
+        animalCellBtn.addEventListener('click', () => initGame('animal'));
+        plantCellBtn.addEventListener('click', () => initGame('plant'));
+        restartButton.addEventListener('click', () => {
+            resultScreen.style.display = 'none';
+            startScreen.style.display = 'block';
+        });
+    </script>
+</body>
+</html>
